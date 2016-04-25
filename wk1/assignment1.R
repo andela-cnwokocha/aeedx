@@ -213,7 +213,7 @@ which.max(prop.table(table(cpsdata$Region, is.na(cpsdata$MetroAreaCode)))[,2])
 nonmetro <- tapply(is.na(cpsdata$MetroAreaCode), cpsdata$State, mean)
 nonmetro[which(nonmetro > .29 & nonmetro <= .3)]
 sort(nonmetro, decreasing = T)[3] ## since there're just two states with all citizens non-metro
-
+cpsdata
 metrocodes <- read_csv(url("https://d37djvu3ytnwxt.cloudfront.net/asset-v1:MITx+15.071x_3+1T2016+type@asset+block/MetroAreaCodes.csv"))
 countrycodes <- read_csv(url("https://d37djvu3ytnwxt.cloudfront.net/asset-v1:MITx+15.071x_3+1T2016+type@asset+block/CountryCodes.csv"))
 nrow(metrocodes)
@@ -228,4 +228,20 @@ table(cpsdata$MetroArea, cpsdata$Hispanic)
 asians <- (table(cpsdata$MetroArea, cpsdata$Race == "Asian"))
 length(which(asians[,2]/rowSums(asians) > .2))
 which.min(tapply(cpsdata$Education == "No high school diploma", cpsdata$MetroArea, mean, na.rm = T))
-cpsdata <- 
+cpsdata <- merge(cpsdata, countrycodes, by.x = "CountryOfBirthCode", by.y = "Code", all.x = TRUE)
+table(cpsdata$Country)
+table(is.na(cpsdata$Country))
+sort(table(cpsdata$Country), decreasing = T)
+nyj <- subset(cpsdata, MetroArea=="New York-Northern New Jersey-Long Island, NY-NJ-PA")
+prop.table(table(nyj$Country != "United States"))
+countryMetroPopulation <- function(country) {
+  cpsdata %>%
+    filter(Country == country) %>%
+    select(MetroArea) %>%
+    table() %>%
+    sort(decreasing = T) %>%
+    head(1)
+}
+countryMetroPopulation("India")
+countryMetroPopulation("Brazil")
+countryMetroPopulation("Somalia")
