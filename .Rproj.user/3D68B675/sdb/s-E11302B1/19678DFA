@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "whos <- read.csv(url(\"https://d37djvu3ytnwxt.cloudfront.net/asset-v1:MITx+15.071x_3+1T2016+type@asset+block/WHO.csv\"), header = TRUE, stringsAsFactors = F)\nstr(whos)\nhead(whos)\ncolnames(whos)\nsummary(whos$FertilityRate)[4]\nmean(whos$Over60)\nwhos$Country[which.min(whos$Over60)]\nwhos$Country[which.max(whos$LiteracyRate)]\nlibrary(ggplot2)\n\nwhos_hist <- ggplot(data = whos, aes(LifeExpectancy, fill = Region))\nwhos_hist +\n  geom_histogram() \n\nwhos_point <- ggplot(whos, aes(LifeExpectancy, FertilityRate)) \nwhos_point +\n  geom_point(aes(colour = Region))\n\nwith(whos, boxplot(ChildMortality ~ Region, ylab=\"Count\", main=\"Boxplot of Child Mortality across regions\"))\n\nwhos_box <- ggplot(whos, aes(Region, ChildMortality))\nwhos_box +\n  geom_boxplot() +\n  labs(title = \"Child Mortality across world regions\")\n\nwith(whos, tapply(ChildMortality, Region, mean))\n\nrm(list=ls())\ngc()\n\n\nusfoods <- read.csv(url(\"https://d37djvu3ytnwxt.cloudfront.net/asset-v1:MITx+15.071x_3+1T2016+type@asset+block/USDA.csv\"), stringsAsFactors = F)\nstr(usfoods)\nhead(usfoods)\nsummary(usfoods[,-c(1,2)])\nusfoods_mat <- as.matrix(usfoods[,-c(1,2)])\nhead(usfoods_mat)\nrownames(usfoods_mat) <- c(1:nrow(usfoods_mat))\nclass(usfoods_mat)\nusfoods_mat <- data.matrix(usfoods_mat[complete.cases(usfoods_mat),])\ndim(usfoods_mat)\nhead(usfoods_mat)\n\nlibrary(RColorBrewer)\nlibrary(DescTools)\n\ntodanger_palette <- colorRampPalette(c(\"green\", \"yellow\", \"red\"))(n = 3)\nheatmap(usfoods_mat[1:1000,], col = todanger_palette)\n\nusfoods$Description\nsummary(usfoods$Calories)\nhist(usfoods$Calories) # left skewed\nmdn <- median(usfoods$Calorie, na.rm = T)\ncaloric_foods <- subset(usfoods, Calories > mdn)\ncaloric_foods <- caloric_foods[complete.cases(caloric_foods),]\nhist(caloric_foods$Calories) # still skewed\nstr(caloric_foods)\nhead(caloric_foods)\nset.seed(1994)\nvalues = sample(1:nrow(caloric_foods), 1000)\nhist(values)\ncaloric_foods <- data.frame(caloric_foods[values, ])\nstr(caloric_foods)\nhead(caloric_foods)\nsummary(caloric_foods$Calories)\nhist(caloric_foods$Calories)\nheatmap(data.matrix(caloric_foods[,-c(1,2)]), col = todanger_palette)\n\nusfoods_plot <- ggplot(usfoods, aes(Protein, TotalFat))\nusfoods_plot +\n  geom_point(shape = 21, size = .5) +\n  scale_color_brewer(palette = todanger_palette) \nhead(usßfoods)\n",
+    "created" : 1460477527155.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2451768152",
+    "id" : "19678DFA",
+    "lastKnownWriteTime" : 1460542781,
+    "last_content_update" : 1460542781522,
+    "path" : "~/myR/myAnalyticEdgeSolutions/wk1/unit1-quick-questions.R",
+    "project_path" : "wk1/unit1-quick-questions.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
